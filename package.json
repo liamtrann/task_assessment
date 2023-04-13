@@ -1,0 +1,8 @@
+{
+  "name": "task_assessment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/liamtrann/task_assessment.git",
+  "author": "liam-tran-09 <108684071+liamtrann@users.noreply.github.com>",
+  "license": "MIT"
+}
