@@ -30,6 +30,27 @@ export const ReviewType = objectType({
 export const ReviewsQuery = extendType({
   type: "Query",
   definition(t) {
+    t.nonNull.list.nonNull.field("review", {
+      type: "Review",
+      args: {
+        id: intArg(),
+        movieId: intArg(),
+        userId: intArg(),
+        rating: intArg(),
+        comment: stringArg(),
+      },
+      async resolve(_parent, args, context: Context, _info): Promise<Review> {
+        const { userId } = context;
+
+        if (!userId) {
+          throw new Error("Can't get Review without logging in.");
+        }
+
+        const review = await Review.findOne({ where: args });
+        if (!review) throw new Error("no review exists");
+        return review;
+      },
+    });
     t.nonNull.list.nonNull.field("reviews", {
       type: "Review",
       resolve(_parent, _args, context: Context, _info): Promise<Review[]> {

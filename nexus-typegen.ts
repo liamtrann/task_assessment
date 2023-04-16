@@ -91,6 +91,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     movie: NexusGenRootTypes['Movie']; // Movie!
     movies: NexusGenRootTypes['Movie'][]; // [Movie!]!
+    review: NexusGenRootTypes['Review'][]; // [Review!]!
     reviews: NexusGenRootTypes['Review'][]; // [Review!]!
   }
   Review: { // field return type
@@ -136,6 +137,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     movie: 'Movie'
     movies: 'Movie'
+    review: 'Review'
     reviews: 'Review'
   }
   Review: { // field return type name
@@ -203,13 +205,22 @@ export interface NexusGenArgTypes {
   }
   Query: {
     movie: { // args
-      id: number; // Int!
+      description?: string | null; // String
+      id?: number | null; // Int
+      movieName?: string | null; // String
     }
     movies: { // args
       filter?: string | null; // String
       orderBy?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
+    }
+    review: { // args
+      comment?: string | null; // String
+      id?: number | null; // Int
+      movieId?: number | null; // Int
+      rating?: number | null; // Int
+      userId?: number | null; // Int
     }
   }
 }

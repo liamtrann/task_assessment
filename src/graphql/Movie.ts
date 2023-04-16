@@ -19,17 +19,18 @@ export const MoviesQuery = extendType({
     t.nonNull.field("movie", {
       type: "Movie",
       args: {
-        id: nonNull(intArg()),
+        id: intArg(),
+        movieName: stringArg(),
+        description: stringArg(),
       },
       async resolve(_parent, args, context: Context, _info): Promise<Movie> {
-        const { id } = args;
         const { userId } = context;
 
         if (!userId) {
           throw new Error("Can't get movie without logging in.");
         }
 
-        const movie = await Movie.findOne({ where: { id } });
+        const movie = await Movie.findOne({ where: args });
         if (!movie) throw new Error("no movie exists");
         return movie;
       },

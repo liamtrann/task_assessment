@@ -28,8 +28,9 @@ type Mutation {
 }
 
 type Query {
-  movie(id: Int!): Movie!
+  movie(description: String, id: Int, movieName: String): Movie!
   movies(filter: String, orderBy: String, skip: Int, take: Int): [Movie!]!
+  review(comment: String, id: Int, movieId: Int, rating: Int, userId: Int): [Review!]!
   reviews: [Review!]!
 }
 
