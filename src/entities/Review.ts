@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -12,13 +13,15 @@ import { Movie } from "./Movie";
 export class Review extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
-  
+
   @Column()
   @OneToOne(() => Movie, (movie) => movie.id)
+  @JoinColumn({ name: "movieId" })
   movieId!: number;
 
   @Column()
   @OneToOne(() => User, (user) => user.id)
+  @JoinColumn({ name: "userId" })
   userId!: number;
 
   @Column()

@@ -70,12 +70,14 @@ export const ReviewMutation = extendType({
         if (review && review.userId === userId && review.movieId === movieId)
           throw new Error("this review is already exists");
 
-        return Review.create({
+        const mov = Review.create({
           movieId,
           comment,
           rating,
           userId,
         });
+        await mov.save();
+        return mov;
       },
     });
     t.field("updateReview", {
@@ -86,7 +88,7 @@ export const ReviewMutation = extendType({
         comment: stringArg(),
       },
       async resolve(_parent, args, context: Context, _info): Promise<Review> {
-        const { id, rating, comment } = args;
+        const { id, ...rest } = args;
         const { userId } = context;
 
         if (!userId) {
@@ -94,17 +96,19 @@ export const ReviewMutation = extendType({
         }
 
         const review = await Review.findOne({ where: { id } });
+
         if (!review) {
           throw new Error("the review doesn't exists");
         } else if (userId !== review.userId) {
           throw new Error("you can't change review of others");
         }
-        Object.assign(review, { rating, comment });
+
+        Object.assign(review, rest);
         return review.save();
       },
     });
     t.field("deleteReview", {
-      type: "Movie",
+      type: "Review",
       args: {
         id: nonNull(intArg()),
       },

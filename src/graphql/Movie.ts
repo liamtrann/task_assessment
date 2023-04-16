@@ -1,6 +1,7 @@
 import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../types/Context";
 import { Movie } from "../entities/Movie";
+import { Like } from "typeorm";
 
 export const MovieType = objectType({
   name: "Movie",
@@ -15,16 +16,48 @@ export const MovieType = objectType({
 export const MoviesQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.nonNull.field("movies", {
+    t.nonNull.field("movie", {
       type: "Movie",
-      resolve(_parent, _args, context: Context, _info): Promise<Movie[]> {
+      args: {
+        id: nonNull(intArg()),
+      },
+      async resolve(_parent, args, context: Context, _info): Promise<Movie> {
+        const { id } = args;
         const { userId } = context;
 
         if (!userId) {
           throw new Error("Can't get movie without logging in.");
         }
 
-        return Movie.find();
+        const movie = await Movie.findOne({ where: { id } });
+        if (!movie) throw new Error("no movie exists");
+        return movie;
+      },
+    });
+    t.nonNull.list.nonNull.field("movies", {
+      type: "Movie",
+      args: {
+        filter: stringArg(),
+        orderBy: stringArg(),
+        skip: intArg(),
+        take: intArg(),
+      },
+      resolve(_parent, args, context: Context, _info): Promise<Movie[]> {
+        const { filter, orderBy, skip, take } = args;
+        const { userId } = context;
+
+        if (!userId) {
+          throw new Error("Can't get movie without logging in.");
+        }
+
+        const where = filter ? { movieName: Like(`%${filter}%`) } : {};
+
+        return Movie.find({
+          where: where,
+          order: { movieName: orderBy },
+          skip: skip as number | undefined,
+          take: take as number | undefined,
+        });
       },
     });
   },
@@ -62,7 +95,7 @@ export const MovieMutation = extendType({
         directorName: stringArg(),
       },
       async resolve(_parent, args, context: Context, _info): Promise<Movie> {
-        const { id, movieName, description, directorName } = args;
+        const { id, ...rest } = args;
         const { userId } = context;
 
         if (!userId) {
@@ -73,7 +106,7 @@ export const MovieMutation = extendType({
 
         if (!movie) throw new Error("the movie doesn't exists");
 
-        Object.assign(movie, { movieName, description, directorName });
+        Object.assign(movie, rest);
 
         return movie.save();
       },

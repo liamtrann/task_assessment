@@ -15,10 +15,12 @@ type Movie {
 }
 
 type Mutation {
+  changePassword(password: String!, token: String!): AuthType!
   createMovie(description: String, directorName: String!, movieName: String!): Movie!
   createReview(comment: String, movieId: Int!, rating: Int!): Review!
   deleteMovie(id: Int!): Movie
-  deleteReview(id: Int!): Movie
+  deleteReview(id: Int!): Review
+  forgotPassword(email: String!): Boolean!
   login(password: String!, username: String!): AuthType!
   register(email: String!, password: String!, username: String!): AuthType!
   updateMovie(description: String, directorName: String, id: Int!, movieName: String): Movie
@@ -26,7 +28,8 @@ type Mutation {
 }
 
 type Query {
-  movies: [Movie!]!
+  movie(id: Int!): Movie!
+  movies(filter: String, orderBy: String, skip: Int, take: Int): [Movie!]!
   reviews: [Review!]!
 }
 

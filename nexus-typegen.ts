@@ -77,16 +77,19 @@ export interface NexusGenFieldTypes {
     movieName: string; // String!
   }
   Mutation: { // field return type
+    changePassword: NexusGenRootTypes['AuthType']; // AuthType!
     createMovie: NexusGenRootTypes['Movie']; // Movie!
     createReview: NexusGenRootTypes['Review']; // Review!
     deleteMovie: NexusGenRootTypes['Movie'] | null; // Movie
-    deleteReview: NexusGenRootTypes['Movie'] | null; // Movie
+    deleteReview: NexusGenRootTypes['Review'] | null; // Review
+    forgotPassword: boolean; // Boolean!
     login: NexusGenRootTypes['AuthType']; // AuthType!
     register: NexusGenRootTypes['AuthType']; // AuthType!
     updateMovie: NexusGenRootTypes['Movie'] | null; // Movie
     updateReview: NexusGenRootTypes['Review'] | null; // Review
   }
   Query: { // field return type
+    movie: NexusGenRootTypes['Movie']; // Movie!
     movies: NexusGenRootTypes['Movie'][]; // [Movie!]!
     reviews: NexusGenRootTypes['Review'][]; // [Review!]!
   }
@@ -119,16 +122,19 @@ export interface NexusGenFieldTypeNames {
     movieName: 'String'
   }
   Mutation: { // field return type name
+    changePassword: 'AuthType'
     createMovie: 'Movie'
     createReview: 'Review'
     deleteMovie: 'Movie'
-    deleteReview: 'Movie'
+    deleteReview: 'Review'
+    forgotPassword: 'Boolean'
     login: 'AuthType'
     register: 'AuthType'
     updateMovie: 'Movie'
     updateReview: 'Review'
   }
   Query: { // field return type name
+    movie: 'Movie'
     movies: 'Movie'
     reviews: 'Review'
   }
@@ -151,6 +157,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    changePassword: { // args
+      password: string; // String!
+      token: string; // String!
+    }
     createMovie: { // args
       description?: string | null; // String
       directorName: string; // String!
@@ -166,6 +176,9 @@ export interface NexusGenArgTypes {
     }
     deleteReview: { // args
       id: number; // Int!
+    }
+    forgotPassword: { // args
+      email: string; // String!
     }
     login: { // args
       password: string; // String!
@@ -186,6 +199,17 @@ export interface NexusGenArgTypes {
       comment?: string | null; // String
       id: number; // Int!
       rating: number; // Int!
+    }
+  }
+  Query: {
+    movie: { // args
+      id: number; // Int!
+    }
+    movies: { // args
+      filter?: string | null; // String
+      orderBy?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
 }
